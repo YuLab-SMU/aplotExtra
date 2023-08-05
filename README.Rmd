@@ -8,18 +8,18 @@ html_preview: false
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 
-# `aplot` for decorating a plot with associated information
+# `aplotExtra`: creating composite plots using 'aplot'
 
 
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/aplot?color=green)](https://cran.r-project.org/package=aplot)
-![](http://cranlogs.r-pkg.org/badges/grand-total/aplot?color=green)
-![](http://cranlogs.r-pkg.org/badges/aplot?color=green)
-![](http://cranlogs.r-pkg.org/badges/last-week/aplot?color=green)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/aplotExtra?color=green)](https://cran.r-project.org/package=aplotExtra)
+![](http://cranlogs.r-pkg.org/badges/grand-total/aplotExtra?color=green)
+![](http://cranlogs.r-pkg.org/badges/aplotExtra?color=green)
+![](http://cranlogs.r-pkg.org/badges/last-week/aplotExtra?color=green)
 
 
 ```{r comment="", echo=FALSE, results='asis'}
-cat(packageDescription('aplot')$Description)
+cat(packageDescription('aplotExtra')$Description)
 ```
 
 
@@ -31,10 +31,6 @@ School of Basic Medical Sciences, Southern Medical University
 
 <https://yulab-smu.top>
 
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?hashtags=ggtree&url=http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12628/abstract&screen_name=guangchuangyu)
-[![saythanks](https://img.shields.io/badge/say-thanks-ff69b4.svg)](https://saythanks.io/to/GuangchuangYu)
-`r badger::badge_custom('follow me on', 'WeChat', 'green', 'https://guangchuangyu.github.io/blog_images/biobabble.jpg')`
-
 
 
 ## :arrow_double_down: Installation
@@ -42,17 +38,14 @@ School of Basic Medical Sciences, Southern Medical University
 Get the released version from CRAN:
 
 ```r
-install.packages("aplot")
+install.packages("aplotExtra")
 ```
 
 Or the development version from github:
 
 ```r
 ## install.packages("remotes")
-remotes::install_github("YuLab-SMU/aplot")
+remotes::install_github("YuLab-SMU/aplotExtra")
 ```
 
 
-## :book: Vignette
-
-For more details, please refer to the [online vignette](https://yulab-smu.top/pkgdocs/aplot.html).
