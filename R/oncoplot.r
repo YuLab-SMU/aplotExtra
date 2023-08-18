@@ -18,22 +18,36 @@ oncoplot <- function(maf, genes = 20) {
     p_main <- oncoplot_main(maf, genes)
     p_top <- oncoplot_sample(maf, genes)
     p_right <- oncoplot_gene(maf, genes, ylab = 'percentage')
+    p_spacer <- ggplot() + ggfun::theme_transparent()
 
     pp <- insert_top(p_main, p_top, height=.2) |>
-        insert_right(p_right, width=.2)
+        insert_right(p_spacer, width=.01) |>
+        insert_right(p_right, width=.2) |>
+        insert_bottom(p_spacer, height=.1)
+
     class(pp) <- c("oncoplot", class(pp))
 
     return(pp)
 }
 
 #' @importFrom ggplot2 geom_tile
+#' @importFrom ggplot2 annotation_custom
+#' @importFrom ggplot2 coord_cartesian
 oncoplot_main <- function(maf, genes = 20) {
     d <- oncoplot_tidy_onco_matrix(maf, genes)
 
-    ggplot(d, aes(x=.data$Sample, y=.data$Gene, fill=.data$Type)) +
+    p <- ggplot(d, aes(x=.data$Sample, y=.data$Gene, fill=.data$Type)) +
         geom_tile(colour="white", linewidth=.05) + 
         oncoplot_setting(continuous = FALSE) +
-        theme(legend.position = "bottom", axis.text.y.left=element_text(face='italic')) 
+        theme(legend.position = "bottom", 
+            axis.text.y.left=element_text(face='italic')) 
+
+    leg <- ggfun::get_legend(p)
+    p + theme(legend.position = "none", 
+            plot.margin = margin(b = 60, r = 5)) +
+        annotation_custom(leg, ymin=-1.5, ymax=-.5) + 
+        coord_cartesian(clip='off')
+    
 }
 
 
@@ -56,10 +70,20 @@ oncoplot_sample <- function(maf, genes = 20, sort = FALSE) {
         d$Type <- factor(d$Type, levels = td)
     }
 
-    ggplot(d, aes(x=.data$Sample,y=.data$Freq,fill=.data$Type)) +
+    p <- ggplot(d, aes(x=.data$Sample,y=.data$Freq,fill=.data$Type)) +
         geom_col(position="stack") +
-        oncoplot_setting() +
-        ylab("TMB") 
+        oncoplot_setting() # +
+        # ylab("TMB") 
+
+    p  + annotation_custom(grob = textGrob(
+            label = "TMB",
+            rot = 90,
+            gp = gpar(fontsize=11),
+            x = -30, default.units = "pt"
+        )) + 
+        coord_cartesian(clip="off") +
+        theme(axis.title.y = element_blank(),
+            plot.margin = margin(l=30))    
 }
 
 #' @importFrom rlang .data
@@ -70,6 +94,9 @@ oncoplot_sample <- function(maf, genes = 20, sort = FALSE) {
 #' @importFrom ggplot2 xlab
 #' @importFrom ggplot2 scale_x_discrete
 #' @importFrom ggplot2 scale_y_discrete
+#' @importFrom ggplot2 margin
+#' @importFrom grid textGrob
+#' @importFrom grid gpar
 oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
     ylab <- match.arg(ylab, c("gene", "percentage"))
 
@@ -78,8 +105,8 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
 
     p <- ggplot(d, aes(y = .data$Gene, fill = .data$Type)) + 
         geom_bar(position='stack', orientation = 'y') + 
-        oncoplot_setting(noxaxis = FALSE, scale='none') +
-        xlab("No. of samples") #+ 
+        oncoplot_setting(noxaxis = FALSE, scale='none') #+
+        # xlab("No. of samples") #+ 
         # guides(y= guide_axis_label_trans(~str_pad(rev(percent_alt), 5)))
 
     if (ylab == 'percentage') {
@@ -91,6 +118,15 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
                                 labels = percent_alt,
                                 expand = c(0, 0))
     }
+
+    p <- p + annotation_custom(grob = textGrob(
+                label = "No. of samples",
+                gp = gpar(fontsize=11),
+        ), ymin=-2, ymax=-1) + 
+    coord_cartesian(clip="off") +
+    theme(axis.title.x = element_blank(),
+        plot.margin = margin(b=40))
+
     return(p)
 }
 
