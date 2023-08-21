@@ -22,7 +22,7 @@
 #' 
 #' @title a_upset_plot 
 #' @param list a list of sets
-#' @param nintersects number of intersects
+#' @param nintersects number of intersects. If NULL, all intersections will show.
 #' @param order.intersect.by one of 'size' or 'name'
 #' @param order.set.by one of 'size' or 'name'
 #' @return an upset plot
@@ -38,7 +38,7 @@
 #'  a_upset_plot(list, order.intersect.by = "name")
 #'  a_upset_plot(list, nintersects = 6)
 a_upset_plot = function(list,    # use 'a_' prefix for all `aplot` objects
-                     nintersects = 40,
+                     nintersects = NULL,
                      order.intersect.by = c("size", "name"),
                      order.set.by = c("size", "name")){
   # process arguments
@@ -159,9 +159,11 @@ tidy_main_subsets = function(list,
                          levels = levels(left_data$set))
  
   # filter intersections
-  keep_id = utils::head(levels(top_data$id), nintersects)
-  main_data = main_data |> dplyr::filter(.data$id %in% keep_id)
-  top_data = top_data |> dplyr::filter(.data$id %in% keep_id)
+  if (!is.null(nintersects)){
+    keep_id = utils::head(levels(top_data$id), nintersects)
+    main_data = main_data |> dplyr::filter(.data$id %in% keep_id)
+    top_data = top_data |> dplyr::filter(.data$id %in% keep_id)
+  }
   
   # return result as a list
   ret = list(top_data = top_data,
