@@ -2,8 +2,7 @@
 #' @param maf MAF object. 
 #' @param genes the gene names or the number, default is 20.
 #' @return \code{oncoplot} object, which is also a \code{aplot} object
-#' @importFrom aplot insert_top
-#' @importFrom aplot insert_right
+#' @importFrom aplot insert_top insert_right insert_bottom
 #' @export
 #' @examples
 #' \dontrun{
@@ -53,8 +52,8 @@ oncoplot_main <- function(maf, genes = 20) {
 
 oncoplot_sample <- function(maf, genes = 20, sort = FALSE) {    
     numMat <- get_oncoplot_numericMatrix(maf, genes)
-    samp_sum <- obtain.sample.summary.MAF(x = maf) %>%
-        as.data.frame() %>%
+    samp_sum <- obtain.sample.summary.MAF(x = maf) |>
+        as.data.frame() |>
         dplyr::select(!.data$total) 
 
     i <- match(colnames(numMat), samp_sum$Tumor_Sample_Barcode)
