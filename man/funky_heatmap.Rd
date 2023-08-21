@@ -7,9 +7,9 @@
 funky_heatmap(..., data = NULL, widths = NULL, options = NULL)
 }
 \arguments{
-\item{...}{funky plots (e.g., outputs of `funky_point`, `funky_bar`, etc.)}
+\item{...}{funky plots (e.g., outputs of \code{funky_point}, \code{funky_bar}, etc.)}
 
-\item{data}{If data is provided, create a funkyheatmap from it. Otherwise, create composite plot from `...`}
+\item{data}{If data is provided, create a funkyheatmap from it. Otherwise, create composite plot from \code{...}}
 
 \item{widths}{relative widths of the plots}
 
