@@ -34,10 +34,10 @@
 #'              B = sample(LETTERS, 22),
 #'              C = sample(LETTERS, 14),
 #'              D = sample(LETTERS, 30, replace = TRUE))
-#'  upsetplot2(list)
-#'  upsetplot2(list, order.intersect.by = "name")
-#'  upsetplot2(list, nintersects = 6)
-upsetplot2 = function(list,    # use 'a_' prefix for all `aplot` objects
+#'  upset_plot(list)
+#'  upset_plot(list, order.intersect.by = "name")
+#'  upset_plot(list, nintersects = 6)
+upset_plot = function(list,    # use 'a_' prefix for all `aplot` objects
                      nintersects = NULL,
                      order.intersect.by = c("size", "name"),
                      order.set.by = c("size", "name")){

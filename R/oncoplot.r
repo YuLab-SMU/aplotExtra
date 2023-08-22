@@ -9,9 +9,9 @@
 #' laml.maf <- system.file("extdata", "tcga_laml.maf.gz", package = "maftools")
 #' laml.clin <- system.file('extdata', 'tcga_laml_annot.tsv', package = 'maftools')
 #' laml <- maftools::read.maf(maf = laml.maf, clinicalData = laml.clin)
-#' oncoplot2(maf = laml, genes = 20)
+#' oncoplot(maf = laml, genes = 20)
 #' }
-oncoplot2 <- function(maf, genes = 20) {
+oncoplot <- function(maf, genes = 20) {
     #yulab.utils::check_pkg("maftools")
 
     p_main <- oncoplot_main(maf, genes)

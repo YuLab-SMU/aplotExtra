@@ -182,7 +182,7 @@ funky_bar <- function(data, cols) {
 ##' create a funkyheatmap
 ##'
 ##' 
-##' @title funky_heatmap2
+##' @title funky_heatmap
 ##' @param ... funky plots (e.g., outputs of `funky_point`, `funky_bar`, etc.)
 ##' @param data If data is provided, create a funkyheatmap from it. Otherwise, create composite plot from `...`
 ##' @param widths relative widths of the plots
@@ -191,7 +191,7 @@ funky_bar <- function(data, cols) {
 ##' @importFrom aplot plot_list
 ##' @export
 ##' @author Guangchuang Yu
-funky_heatmap2 <- function(..., data=NULL, widths = NULL, options=NULL) {
+funky_heatmap <- function(..., data=NULL, widths = NULL, options=NULL) {
 
     nrow = 1
     guides = 'collect'
