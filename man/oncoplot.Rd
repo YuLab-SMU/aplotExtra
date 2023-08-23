@@ -18,10 +18,9 @@ oncoplot(maf, genes = 20)
 ploting oncoplot with aplot
 }
 \examples{
-\dontrun{
 laml.maf <- system.file("extdata", "tcga_laml.maf.gz", package = "maftools")
 laml.clin <- system.file('extdata', 'tcga_laml_annot.tsv', package = 'maftools')
 laml <- maftools::read.maf(maf = laml.maf, clinicalData = laml.clin)
 oncoplot(maf = laml, genes = 20)
-}
+
 }

@@ -1,3 +1,7 @@
+# aplotExtra 0.0.2
+
++ update `upsetplot()` and rename to `upset_plot()` 
+
 # aplotExtra 0.0.1
 
 + prototype version of `upsetplot()` from aplot (2023-08-04, Fri)
