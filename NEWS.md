@@ -1,3 +1,7 @@
+# aplotExtra 0.0.2.001
+
++ import `xlab2()` and `ylab2()` (2024-06-17, Mon)
+
 # aplotExtra 0.0.2
 
 + update `upsetplot()` and rename to `upset_plot()` 

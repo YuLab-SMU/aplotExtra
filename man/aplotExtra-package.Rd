@@ -22,6 +22,7 @@ Other contributors:
 \itemize{
   \item Shuangbin Xu \email{xshuangbin@163.com} (\href{https://orcid.org/0000-0003-3513-5362}{ORCID}) [contributor]
   \item Chun-Hui Gao \email{gaospecial@gmail.com} (\href{https://orcid.org/0000-0002-1445-7939}{ORCID}) [contributor]
+  \item Shensuo Li \email{lishensuo@163.com} (\href{https://orcid.org/0009-0006-3229-3700}{ORCID}) [contributor]
 }
 
 }

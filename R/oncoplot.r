@@ -49,7 +49,7 @@ oncoplot_main <- function(maf, genes = 20) {
     
 }
 
-
+##' @importFrom aplot ylab2
 oncoplot_sample <- function(maf, genes = 20, sort = FALSE) {    
     numMat <- get_oncoplot_numericMatrix(maf, genes)
     samp_sum <- obtain.sample.summary.MAF(x = maf) |>
@@ -71,19 +71,14 @@ oncoplot_sample <- function(maf, genes = 20, sort = FALSE) {
 
     p <- ggplot(d, aes(x=.data$Sample,y=.data$Freq,fill=.data$Type)) +
         geom_col(position="stack") +
-        oncoplot_setting() # +
-        # ylab("TMB") 
-
-    p  + annotation_custom(grob = textGrob(
-            label = "TMB",
-            rot = 90,
-            gp = gpar(fontsize=11),
-            x = -30, default.units = "pt"
-        )) + 
-        coord_cartesian(clip="off") +
-        theme(axis.title.y = element_blank(),
-            plot.margin = margin(l=30))    
+        oncoplot_setting() +
+        ylab2("TMB") 
+    
+    return(p)
 }
+
+
+
 
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot
@@ -96,6 +91,7 @@ oncoplot_sample <- function(maf, genes = 20, sort = FALSE) {
 #' @importFrom ggplot2 margin
 #' @importFrom grid textGrob
 #' @importFrom grid gpar
+#' @importFrom aplot xlab2
 oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
     ylab <- match.arg(ylab, c("gene", "percentage"))
 
@@ -118,13 +114,7 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
                                 expand = c(0, 0))
     }
 
-    p <- p + annotation_custom(grob = textGrob(
-                label = "No. of samples",
-                gp = gpar(fontsize=11),
-        ), ymin=-2, ymax=-1) + 
-    coord_cartesian(clip="off") +
-    theme(axis.title.x = element_blank(),
-        plot.margin = margin(b=40))
+    p <- p + xlab2("No. of samples")
 
     return(p)
 }
