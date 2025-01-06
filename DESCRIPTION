@@ -24,7 +24,7 @@ Imports:
   tidyr,
   utils,
   ggstar,
-  yulab.utils (>= 0.0.8)
+  yulab.utils (>= 0.1.9)
 Suggests:
   ggtree,
   data.table,

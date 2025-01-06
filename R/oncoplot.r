@@ -121,6 +121,9 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
 
 #' @importFrom ggplot2 theme_minimal
 oncoplot_scale <- function(continuous = TRUE, scale = 'y') {
+
+    yulab.utils:::.crap(n=2L, fn = 'caller function')
+
     scale <- match.arg(scale, c('x', 'y', 'none'))
     if (scale == 'none') {
         return(NULL)
