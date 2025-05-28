@@ -36,8 +36,9 @@
 #'              C = sample(LETTERS, 14),
 #'              D = sample(LETTERS, 30, replace = TRUE))
 #'  upset_plot(list)
-#'  upset_plot(list, remove_empty_intersects = FALSE)
+#'  upset_plot(list, remove_empty_intersects = TRUE)
 #'  upset_plot(list, order.intersect.by = "name")
+#'  upset_plot(list, order.set.by = "name")
 #'  upset_plot(list, nintersects = 6)
 upset_plot = function(list,    # use 'a_' prefix for all `aplot` objects
                       nintersects = NULL,
@@ -113,7 +114,7 @@ upsetplot_top <- function(data, color_by_id = NULL) {
     ggplot2::geom_text(
       aes(label = ifelse(size > 0, size, NA)),
       vjust = -0.3,
-      size = 5
+      size = 4.5
     ) +
     ggplot2::scale_fill_identity() +
     ggplot2::labs(x = "", y = "Intersection Size") +
@@ -200,12 +201,12 @@ tidy_main_subsets = function(list,
   # main data
   main_data = data |>
     dplyr::select(c("id")) |>
-    dplyr::mutate(id = factor(.data$id, levels = unique(.data$id)),
-                  set = .data$id) |>
+    dplyr::mutate(set = .data$id) |>
     tidyr::separate_longer_delim(.data$set, delim = "/")
+  
+  main_data$id <- factor(main_data$id, levels = levels(top_data$id))
   main_data$set = factor(set_name[as.integer(main_data$set)],
                          levels = levels(left_data$set))
-  
   # filter intersections
   if (!is.null(nintersects)){
     keep_id = utils::head(levels(top_data$id), nintersects)
