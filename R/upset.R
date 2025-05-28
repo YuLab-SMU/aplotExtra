@@ -25,7 +25,7 @@
 #' @param nintersects number of intersects. If NULL, all intersections will show.
 #' @param order.intersect.by one of 'size' or 'name'
 #' @param order.set.by one of 'size' or 'name'
-#' @param remove_empty_intersects remove the intersects which have zero elements. Default is FALSE.
+#' @param remove_empty_intersects remove the intersects which have zero elements. Default is TRUE.
 #' @return an upset plot
 #' 
 #' @export
@@ -36,14 +36,14 @@
 #'              C = sample(LETTERS, 14),
 #'              D = sample(LETTERS, 30, replace = TRUE))
 #'  upset_plot(list)
-#'  upset_plot(list, remove_empty_intersects = TRUE)
+#'  upset_plot(list, remove_empty_intersects = FALSE)
 #'  upset_plot(list, order.intersect.by = "name")
 #'  upset_plot(list, nintersects = 6)
 upset_plot = function(list,    # use 'a_' prefix for all `aplot` objects
                       nintersects = NULL,
                       order.intersect.by = c("size", "name"),
                       order.set.by = c("size", "name"),
-                      remove_empty_intersects = FALSE){
+                      remove_empty_intersects = TRUE){
   
   # process arguments
   if (is.null(names(list))){  # we need a named list
