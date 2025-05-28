@@ -25,6 +25,7 @@
 #' @param nintersects number of intersects. If NULL, all intersections will show.
 #' @param order.intersect.by one of 'size' or 'name'
 #' @param order.set.by one of 'size' or 'name'
+#' @param remove_empty_intersects remove the intersects which have zero elements. Default is FALSE.
 #' @return an upset plot
 #' 
 #' @export
@@ -35,12 +36,15 @@
 #'              C = sample(LETTERS, 14),
 #'              D = sample(LETTERS, 30, replace = TRUE))
 #'  upset_plot(list)
+#'  upset_plot(list, remove_empty_intersects = TRUE)
 #'  upset_plot(list, order.intersect.by = "name")
 #'  upset_plot(list, nintersects = 6)
 upset_plot = function(list,    # use 'a_' prefix for all `aplot` objects
-                     nintersects = NULL,
-                     order.intersect.by = c("size", "name"),
-                     order.set.by = c("size", "name")){
+                      nintersects = NULL,
+                      order.intersect.by = c("size", "name"),
+                      order.set.by = c("size", "name"),
+                      remove_empty_intersects = FALSE){
+  
   # process arguments
   if (is.null(names(list))){  # we need a named list
     names(list) = paste("Set", seq_along(list), sep = "_")
@@ -52,46 +56,87 @@ upset_plot = function(list,    # use 'a_' prefix for all `aplot` objects
   data = tidy_main_subsets(list,
                            nintersects = nintersects,
                            order.intersect.by = order.intersect.by,
-                           order.set.by = order.set.by)
-  p_main = upsetplot_main(data$main_data)
+                           order.set.by = order.set.by,
+                           remove_empty_intersects = remove_empty_intersects)
+  
+  id_levels <- levels(data$main_data$id)
+  base_colors <- RColorBrewer::brewer.pal(8, "Set2")
+  color_vec <- grDevices::colorRampPalette(base_colors)(length(id_levels))
+  color_by_id <- setNames(color_vec, id_levels)
+  
+  set_levels <- levels(data$left_data$set)
+  base_set_colors <- RColorBrewer::brewer.pal(8, "Dark2")
+  color_vec_set <- grDevices::colorRampPalette(base_set_colors)(length(set_levels))
+  color_by_set <- setNames(color_vec_set, set_levels)
+  
+  p_main = upsetplot_main(data$main_data, color_by_id = color_by_id)
   
   # subplot top
-  p_top = upsetplot_top(data$top_data)
+  p_top = upsetplot_top(data$top_data, color_by_id = color_by_id)
   
   # subplot left
-  p_left = upsetplot_left(data$left_data)
-
+  p_left = upsetplot_left(data$left_data, color_by_set = color_by_set)
+  
   # combine into a plot
   pp = aplot::insert_top(p_main, p_top, height=4) |>
     aplot::insert_left(p_left, width=.2)
   class(pp) <- c("a_upset_plot", class(pp))
-
+  
   return(pp)
 }
 
-upsetplot_main = function(data){
+upsetplot_main <- function(data, color_by_id = NULL) {
+  if (!is.null(color_by_id)) {
+    data$color <- color_by_id[as.character(data$id)]
+  } else {
+    data$color <- "grey30"
+  }
+  
   ggplot2::ggplot(data, aes(.data$id, .data$set)) +
-    ggplot2::geom_point(size = 4, color = "grey30", na.rm = FALSE) +
-    ggplot2::geom_path(aes(group = .data$id), size = 1.5, color = "grey30", na.rm = FALSE) +
+    ggplot2::geom_point(aes(color = color), size = 4, na.rm = FALSE) +
+    ggplot2::geom_path(aes(group = .data$id, color = color), size = 1.5, na.rm = FALSE) +
+    ggplot2::scale_color_identity() +
     ggplot2::labs(x = "Set Intersection", y = "") +
     theme_upset_main()
 }
 
-upsetplot_top = function(data){
+
+upsetplot_top <- function(data, color_by_id = NULL) {
+  if (!is.null(color_by_id)) {
+    data$fill <- color_by_id[as.character(data$id)]
+  } else {
+    data$fill <- "grey70"
+  }
+  
   ggplot2::ggplot(data, aes(.data$id, .data$size)) +
-    ggplot2::geom_col() +
+    ggplot2::geom_col(aes(fill = fill)) +
+    ggplot2::geom_text(
+      aes(label = ifelse(size > 0, size, NA)),
+      vjust = -0.3,
+      size = 5
+    ) +
+    ggplot2::scale_fill_identity() +
     ggplot2::labs(x = "", y = "Intersection Size") +
     theme_upset_top()
 }
 
-upsetplot_left = function(data){
+
+upsetplot_left <- function(data, color_by_set = NULL) {
+  if (!is.null(color_by_set)) {
+    data$fill <- color_by_set[as.character(data$set)]
+  } else {
+    data$fill <- "grey80"
+  }
+  
   ggplot2::ggplot(data, aes(x = .data$size, y = .data$set)) +
-    ggplot2::geom_col(orientation = "y") +
+    ggplot2::geom_col(aes(fill = fill), orientation = "y") +
+    ggplot2::scale_fill_identity() +
     ggplot2::scale_y_discrete(position = "right") +
     ggplot2::scale_x_reverse() +
     ggplot2::labs(x = "Set Size") +
     theme_upset_left()
 }
+
 
 ## (PART) Theme
 
@@ -117,7 +162,7 @@ theme_upset_top = function(){
 }
 
 theme_upset_left = function(){
-   ggplot2::theme_bw() +
+  ggplot2::theme_bw() +
     ggplot2::theme(
       axis.ticks.y = ggplot2::element_blank(),
       axis.title.y = ggplot2::element_blank(),
@@ -135,34 +180,44 @@ theme_upset_left = function(){
 tidy_main_subsets = function(list,
                              nintersects,
                              order.intersect.by,
-                             order.set.by){
+                             order.set.by,
+                             remove_empty_intersects = TRUE){
+  
   data = get_all_subsets(list)
   set_name = names(list)
-
+  
   # top data
   top_data = data |>
     dplyr::select(c('id','name', 'item','size')) |>
     dplyr::mutate(id = forcats::fct_reorder(.data$id, .data[[order.intersect.by]], .desc = TRUE))
-
+  
   # left data
   left_data = dplyr::tibble(set = set_name,
                             name = set_name,
                             size = sapply(list, length)) |>
     dplyr::mutate(set = forcats::fct_reorder(.data$set, .data[[order.set.by]], .desc = TRUE))
-
+  
   # main data
   main_data = data |>
     dplyr::select(c("id")) |>
-    dplyr::mutate(set = .data$id) |>
+    dplyr::mutate(id = factor(.data$id, levels = unique(.data$id)),
+                  set = .data$id) |>
     tidyr::separate_longer_delim(.data$set, delim = "/")
   main_data$set = factor(set_name[as.integer(main_data$set)],
                          levels = levels(left_data$set))
- 
+  
   # filter intersections
   if (!is.null(nintersects)){
     keep_id = utils::head(levels(top_data$id), nintersects)
     main_data = main_data |> dplyr::filter(.data$id %in% keep_id)
     top_data = top_data |> dplyr::filter(.data$id %in% keep_id)
+  }
+  
+  # remove empty intersects if necessary
+  if (remove_empty_intersects) {
+    non_empty_ids <- top_data$id[top_data$size > 0]
+    top_data <- top_data[top_data$id %in% non_empty_ids, , drop = FALSE]
+    main_data <- main_data[main_data$id %in% non_empty_ids, , drop = FALSE]
   }
   
   # return result as a list
@@ -224,7 +279,7 @@ get_all_subsets_ids <- function(list, sep = "/"){
 overlap <- function(list, idx){
   slice1 <- list[idx]
   slice2 <- list[-idx]
-
+  
   if (length(slice1) > 1L){
     overlap = slice1 |> purrr::reduce(intersect)
   } else if (length(slice1) == 1L){
@@ -232,7 +287,7 @@ overlap <- function(list, idx){
   } else {
     overlap <- NULL
   }
-
+  
   if (length(slice2) > 1L){
     outmember <- slice2 |> purrr::reduce(union)
   } else if (length(slice2) == 1L){
@@ -240,6 +295,6 @@ overlap <- function(list, idx){
   } else {
     outmember <- NULL
   }
-
+  
   setdiff(overlap, outmember)
 }
