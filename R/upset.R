@@ -25,9 +25,11 @@
 #' @param nintersects number of intersects. If NULL, all intersections will show.
 #' @param order.intersect.by one of 'size' or 'name'
 #' @param order.set.by one of 'size' or 'name'
+#' @param color.intersect.by color scheme for 'intersect' bars (e.g., "Set2"), default is "none"
+#' @param color.set.by color scheme for 'set' bars (e.g., "Set3"), default is "none"
 #' @param remove_empty_intersects remove the intersects which have zero elements. Default is TRUE.
 #' @return an upset plot
-#' 
+#' @importFrom stats setNames
 #' @export
 #' 
 #' @examples
@@ -107,8 +109,8 @@ upsetplot_main <- function(data, color_by_id = NULL) {
     data$color <- color_by_id[as.character(data$id)]
   } 
   ggplot2::ggplot(data, aes(.data$id, .data$set)) +
-    ggplot2::geom_point(aes(color = color), size = 4, na.rm = FALSE) +
-    ggplot2::geom_path(aes(group = .data$id, color = color), linewidth = 1.5, na.rm = FALSE) +
+    ggplot2::geom_point(aes(color = .data$color), size = 4, na.rm = FALSE) +
+    ggplot2::geom_path(aes(group = .data$id, color = .data$color), linewidth = 1.5, na.rm = FALSE) +
     ggplot2::scale_color_identity() +
     ggplot2::labs(x = "Set Intersection", y = "") +
     theme_upset_main()
@@ -119,9 +121,9 @@ upsetplot_top <- function(data, color_by_id = NULL) {
     data$fill <- color_by_id[as.character(data$id)]
   } 
   ggplot2::ggplot(data, aes(.data$id, .data$size)) +
-    ggplot2::geom_col(aes(fill = fill)) +
+    ggplot2::geom_col(aes(fill = .data$fill)) +
     ggplot2::geom_text(
-      aes(label = ifelse(size > 0, size, NA)),
+      aes(label = ifelse(.data$size > 0, .data$size, NA)),
       vjust = -0.25,
       size = 4
     ) +
@@ -136,7 +138,7 @@ upsetplot_left <- function(data, color_by_set = NULL) {
     data$fill <- color_by_set[as.character(data$set)]
   } 
   ggplot2::ggplot(data, aes(x = .data$size, y = .data$set)) +
-    ggplot2::geom_col(aes(fill = fill), orientation = "y") +
+    ggplot2::geom_col(aes(fill = .data$fill), orientation = "y") +
     ggplot2::scale_fill_identity() +
     ggplot2::scale_y_discrete(position = "right") +
     ggplot2::scale_x_reverse() +

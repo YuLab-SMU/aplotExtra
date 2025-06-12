@@ -8,7 +8,10 @@ upset_plot(
   list,
   nintersects = NULL,
   order.intersect.by = c("size", "name"),
-  order.set.by = c("size", "name")
+  order.set.by = c("size", "name"),
+  color.intersect.by = "none",
+  color.set.by = "none",
+  remove_empty_intersects = TRUE
 )
 }
 \arguments{
@@ -19,6 +22,12 @@ upset_plot(
 \item{order.intersect.by}{one of 'size' or 'name'}
 
 \item{order.set.by}{one of 'size' or 'name'}
+
+\item{color.intersect.by}{color scheme for 'intersect' bars (e.g., "Set2"), default is "none"}
+
+\item{color.set.by}{color scheme for 'set' bars (e.g., "Set3"), default is "none"}
+
+\item{remove_empty_intersects}{remove the intersects which have zero elements. Default is TRUE.}
 }
 \value{
 an upset plot
@@ -35,6 +44,8 @@ This function generate a upset plot by creating a composite plot which contains 
              C = sample(LETTERS, 14),
              D = sample(LETTERS, 30, replace = TRUE))
  upset_plot(list)
+ upset_plot(list, remove_empty_intersects = TRUE)
  upset_plot(list, order.intersect.by = "name")
+ upset_plot(list, order.set.by = "name")
  upset_plot(list, nintersects = 6)
 }
