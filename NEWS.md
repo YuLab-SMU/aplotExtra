@@ -1,3 +1,8 @@
+# aplotExtra 0.0.4
+
++ add citation information (2025-06-12, Thu)
++ update `upset_plot` to allow setting color (2025-05-29, Thu)
+
 # aplotExtra 0.0.3
 
 + import `xlab2()` and `ylab2()` from 'aplot' (2024-06-17, Mon)

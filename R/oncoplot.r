@@ -36,7 +36,7 @@ oncoplot_main <- function(maf, genes = 20) {
     d <- oncoplot_tidy_onco_matrix(maf, genes)
 
     p <- ggplot(d, aes(x=.data$Sample, y=.data$Gene, fill=.data$Type)) +
-        geom_tile(colour="white", linewidth=.05) + 
+        geom_tile(colour="white", linewidth=.01) + 
         oncoplot_setting(continuous = FALSE) +
         theme(legend.position = "bottom", 
             axis.text.y.left=element_text(face='italic')) 
