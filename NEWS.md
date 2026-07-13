@@ -1,3 +1,12 @@
+# aplotExtra 0.0.5
+
++ add testthat infrastructure and unit tests for upset and funkyheatmap data functions (2026-07-13, Sun)
++ fix tidyselect deprecation: `.data$set` → `"set"` in `tidy_main_subsets()`
++ fix tidyselect deprecation: use `all_of()` for external column vector in `funky_data()`
++ remove unnecessary `require(ggstar)` inside `funky_point()`, since `ggstar` is already formally imported
++ fix `@title` of `upset_plot()` from "upsetplot2" to "upset_plot"
++ uncomment `check_pkg("maftools")` in `oncoplot()` for early, user-friendly error
+
 # aplotExtra 0.0.4
 
 + add citation information (2025-06-12, Thu)

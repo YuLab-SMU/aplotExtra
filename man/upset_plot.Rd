@@ -2,7 +2,7 @@
 % Please edit documentation in R/upset.R
 \name{upset_plot}
 \alias{upset_plot}
-\title{upsetplot2}
+\title{upset_plot}
 \usage{
 upset_plot(
   list,

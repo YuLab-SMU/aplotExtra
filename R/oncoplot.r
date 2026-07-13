@@ -12,7 +12,7 @@
 #' oncoplot(maf = laml, genes = 20)
 #' }
 oncoplot <- function(maf, genes = 20) {
-    #yulab.utils::check_pkg("maftools")
+    yulab.utils::check_pkg("maftools")
 
     p_main <- oncoplot_main(maf, genes)
     p_top <- oncoplot_sample(maf, genes)

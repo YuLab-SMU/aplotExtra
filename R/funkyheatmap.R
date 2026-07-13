@@ -51,8 +51,9 @@ funky_data <- function(data, cols, cols2 = NULL) {
     data <- data[, c(1, cols, cols2)] |>
       funky_id() 
     cols2 <- setdiff(seq_len(ncol(data)), seq_len(length(cols))+1)
+    exclude_names <- colnames(data)[cols2]
     data |>
-      tidyr::pivot_longer(-c(1, cols2)) |>
+      tidyr::pivot_longer(-tidyr::all_of(exclude_names)) |>
       dplyr::mutate(id=factor(.data$id, levels = rev(data$id)))
 }
 
@@ -96,9 +97,6 @@ funky_text <- function(data, cols = 1, hjust=0) {
 ##' @author Guangchuang Yu
 funky_point <- function(data, cols, cols2 = NULL, ...) {
   d2 <- funky_data(data, cols, cols2)
-
-  ggstar <- "ggstar"
-  require(ggstar, character.only=TRUE, quietly=TRUE) 
 
   p <- ggplot(d2, aes(.data$name, .data$id)) #+ 
   mapping <- aes(size = .data$value, fill = .data$value)
