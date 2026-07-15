@@ -1,3 +1,8 @@
+# aplotExtra 0.0.5.001
+
++ export `oncoplot_components()` as a reusable component interface for downstream oncoplot extensions (2026-07-15, Wed)
++ refactor `oncoplot()` to assemble panels from `oncoplot_components()` with native pipe syntax
+
 # aplotExtra 0.0.5
 
 + add testthat infrastructure and unit tests for upset and funkyheatmap data functions (2026-07-13, Sun)

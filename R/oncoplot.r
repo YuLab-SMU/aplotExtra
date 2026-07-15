@@ -14,19 +14,52 @@
 oncoplot <- function(maf, genes = 20) {
     yulab.utils::check_pkg("maftools")
 
-    p_main <- oncoplot_main(maf, genes)
-    p_top <- oncoplot_sample(maf, genes)
-    p_right <- oncoplot_gene(maf, genes, ylab = 'percentage')
+    comp <- oncoplot_components(maf, genes)
     p_spacer <- ggplot() + ggfun::theme_transparent()
 
-    pp <- insert_top(p_main, p_top, height=.2) |>
+    pp <- comp$main |>
+        insert_top(comp$sample, height=.2) |>
         insert_right(p_spacer, width=.01) |>
-        insert_right(p_right, width=.2) |>
+        insert_right(comp$gene, width=.2) |>
         insert_bottom(p_spacer, height=.1)
 
     class(pp) <- c("oncoplot", class(pp))
 
     return(pp)
+}
+
+#' Get reusable oncoplot components
+#'
+#' Build the reusable panels and tidy data used by [oncoplot()].
+#' This function is intended for downstream packages that want to assemble
+#' an oncoplot with additional tracks while reusing the aplotExtra mutation
+#' matrix, sample burden, gene burden, and mutation color mapping.
+#'
+#' @param maf A MAF object.
+#' @param genes The gene names or number of top mutated genes.
+#'
+#' @return A list with components:
+#' \describe{
+#'   \item{data}{Tidy oncoplot matrix.}
+#'   \item{main}{Main mutation tile plot.}
+#'   \item{sample}{Sample-level top annotation plot.}
+#'   \item{gene}{Gene-level side annotation plot.}
+#'   \item{colors}{Named mutation-class color vector.}
+#' }
+#' @export
+oncoplot_components <- function(maf, genes = 20) {
+    d <- oncoplot_tidy_onco_matrix(maf, genes)
+
+    structure(
+        list(
+            data = d,
+            main = oncoplot_main(maf, genes),
+            sample = oncoplot_sample(maf, genes),
+            gene = oncoplot_gene(maf, genes, ylab = "percentage"),
+            colors = get_vcColors(websafe = FALSE)
+        ),
+        class = "aplotextra_oncoplot_components"
+    )
 }
 
 #' @importFrom ggplot2 geom_tile
